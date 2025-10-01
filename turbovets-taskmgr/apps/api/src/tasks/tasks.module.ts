@@ -11,7 +11,7 @@ import { RbacGuard } from '@turbovets-taskmgr/auth';
   imports: [TypeOrmModule.forFeature([Task, User])],
   providers: [
     TasksService,
-    { provide: APP_GUARD, useClass: RbacGuard },
+    { provide: APP_GUARD, useClass: RbacGuard }, //This is for enabling RBAC globally
   ],
   controllers: [TasksController],
 })

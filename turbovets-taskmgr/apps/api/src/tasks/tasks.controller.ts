@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Roles } from '@turbovets-taskmgr/auth';
+import { RbacGuard, Roles } from '@turbovets-taskmgr/auth';
 import { Role } from '@turbovets-taskmgr/data';
 import { ReqUser } from '../auth/req-user.decorator';
 
@@ -9,7 +9,7 @@ class CreateTaskDto { title!: string; description?: string; category?: string; }
 class UpdateTaskDto { title?: string; description?: string; category?: string; status?: string; }
 
 @Controller('tasks')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RbacGuard)
 export class TasksController {
   constructor(private svc: TasksService) {}
 
