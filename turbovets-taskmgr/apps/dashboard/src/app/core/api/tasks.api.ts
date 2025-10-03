@@ -29,6 +29,7 @@ export class TasksApi {
     }
 
     create(dto: CreateTaskDto): Observable<Task> {
+        console.log('Creating task', dto);
         return this.http.post<Task>(`${this.base}/tasks`, dto);
     }
 

@@ -2,7 +2,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, exhaustMap, map, of, tap } from 'rxjs';
 
 import * as AuthActions from './auth.actions';
 import { AuthApi } from '../../core/api/auth.api';
@@ -18,10 +18,14 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      mergeMap(({ email, password }) =>
+      exhaustMap(({ email, password }) =>
         this.api.login({ email, password }).pipe(
           map(res => AuthActions.loginSuccess({ token: res.access_token })),
-          catchError(error => of(AuthActions.loginFailure({ error })))
+          catchError(err =>
+            of(AuthActions.loginFailure({
+              error: err?.error?.message ?? 'Invalid email or password'
+            }))
+          )
         )
       )
     )

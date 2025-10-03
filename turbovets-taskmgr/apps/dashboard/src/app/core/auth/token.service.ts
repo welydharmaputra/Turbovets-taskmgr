@@ -16,6 +16,7 @@ export class TokenService {
   }
 
   set(token: string) {
+    console.log('Setting token', token);
     this.storage?.setItem(KEY, token);
   }
 

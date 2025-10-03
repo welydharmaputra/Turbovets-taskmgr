@@ -52,7 +52,7 @@ export default function app() {
             context
           ),
         {
-          // ✅ renderApplication expects 'document', not 'documentFilePath'
+          //  renderApplication expects 'document', not 'documentFilePath'
           document,
           url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
           // platformProviders?: [...]   // only if you need extra platform-level providers
@@ -66,7 +66,7 @@ export default function app() {
   });
 
   // Optional error handler
-  server.use((err: unknown, _req: Request, res: Response, next: NextFunction) => {
+  server.use((err: unknown, _req: Request, res: Response) => {
   console.error(err);
 
   const isProd = process.env['NODE_ENV'] === 'production';

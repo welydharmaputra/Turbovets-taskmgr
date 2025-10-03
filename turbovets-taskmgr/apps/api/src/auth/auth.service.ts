@@ -14,18 +14,37 @@ export class AuthService {
   ) {}
 
   async validateAndLogin(email: string, password: string) {
-    const user = await this.users.findOne({ where: { email } });
-    if (!user) throw new UnauthorizedException('Invalid credentials');
+    // 1) Load the organization relation OR use an organizationId column if you have one
+    const user = await this.users.findOne({
+      where: { email },
+      relations: { organization: true },    // load org relation (if any)
+    });
+
+    if (!user?.passwordHash) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) throw new UnauthorizedException('Invalid credentials');
 
+    // 2) Resolve orgId from relation or column
+    const orgId =
+      (user as any).organizationId ?? user.organization?.id; // support both shapes
+    if (!orgId) {
+      // If seed didn’t connect the user to an org, fail early
+      throw new UnauthorizedException('User is not in an organization');
+    }
+
+    // 3) Build claims
     const payload: JwtClaims = {
       sub: user.id,
       email: user.email,
-      orgId: user.organization.id,
-      role: user.role as any,
+      orgId,
+      role: user.role as JwtClaims['role'],
     };
-    return { access_token: await this.jwt.signAsync(payload) };
+
+    // 4) Sign with the SAME secret configured in JwtModule
+    const access_token = await this.jwt.signAsync(payload);
+    return { access_token };
   }
 }
