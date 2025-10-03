@@ -1,6 +1,6 @@
-#To run the front-end and back-end, you need to run "npx nx serve dashboard" and "npx nx serve api" on a different powershells.
+# To run the front-end and back-end, you need to run "npx nx serve dashboard" and "npx nx serve api" on a different powershells.
 
-##The Architecture overview:
+## The Architecture overview:
 
 ## Architecture Overview
 
@@ -47,9 +47,9 @@ turbovets-taskmgr/
 
 
 
-##Access control design & data models
+## Access control design & data models
 
-###Data model (simplified)
+### Data model (simplified)
 
 Organization: id, name
 
@@ -74,7 +74,7 @@ interface JwtClaims {
 passport-jwt extracts the Bearer token; JwtStrategy.validate() returns JwtClaims,
 which becomes req.user.
 
-###Guards & decorators
+### Guards & decorators
 
 -  JwtAuthGuard – ensures a valid token is present.
 
@@ -82,7 +82,7 @@ which becomes req.user.
 
 -  @ReqUser() – decorator to retrieve the JwtClaims from req.user.
 
-###Service-level enforcement
+### Service-level enforcement
 
 -  Even if a controller forgets a guard, services still enforce tenant & role rules:
 
@@ -92,7 +92,7 @@ which becomes req.user.
 
 -  Updates/removes re-check the resource belongs to the caller’s org before writing.
 
-###Trade-offs & decisions
+### Trade-offs & decisions
 
 -  RBAC simplicity vs flexibility: a single role on User is easy to reason about,
 but coarse. For finer control, move to permission flags or role-per-resource.
@@ -108,7 +108,7 @@ longer sessions.
 
 
 
-##Sample API requests & responses
+## Sample API requests & responses
 
 Base URL: http://localhost:3000/api
 
@@ -122,11 +122,11 @@ Content-Type: application/json
 
 
 
-##Notes on potential future enhancements
+## Notes on potential future enhancements
 
-###Complete all the error until it's done
+### Complete all the error until it's done
 
-###Auth/session
+### Auth/session
 
 - Refresh tokens with rotation & revoke lists
 
@@ -134,13 +134,13 @@ Content-Type: application/json
 
 - SSO (OIDC) provider integration
 
-###RBAC/permissions
+### RBAC/permissions
 
 - Fine-grained, resource-level permissions (policy engine or attribute-based access)
 
 - Role per project/space instead of global role
 
-###API & data
+### API & data
 
 - Pagination, sorting & filtering at the API layer
 
@@ -148,7 +148,7 @@ Content-Type: application/json
 
 - WebSocket/SSE for live task updates
 
-###Frontend
+### Frontend
 
 - Optimistic updates with rollback on failure
 
@@ -156,7 +156,7 @@ Content-Type: application/json
 
 - Component tests + Cypress e2e
 
-###Ops
+### Ops
 
 - Dockerfile + docker-compose (db + api + web)
 
