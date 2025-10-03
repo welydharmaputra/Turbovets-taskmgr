@@ -2,32 +2,49 @@
 
 ##The Architecture overview:
 
+## Architecture Overview
+
+```
 turbovets-taskmgr/
 ├─ apps/
-│  ├─ api/                     # NestJS application
-│  │  ├─ src/app/
-│  │  │  ├─ app.module.ts
-│  │  │  ├─ entities/          # TypeORM entities: Organization, User, Task
-│  │  │  ├─ auth/              # AuthController/Service/Strategy, guards, decorators
-│  │  │  ├─ tasks/             # TasksController/Service
-│  │  │  └─ seed.ts            # seedDev(...) in non-production
-│  │  └─ main.ts
-│  └─ dashboard/               # Angular standalone app (NgRx)
-│     ├─ src/app/
-│     │  ├─ app.component.ts   # Shell (standalone)
-│     │  ├─ app.routes.ts      # Routes ('/login', '/tasks')
-│     │  ├─ core/
-│     │  │  ├─ api/            # AuthApi, TasksApi (HttpClient wrappers)
-│     │  │  └─ auth/           # TokenService, jwt.interceptor, auth.guard
-│     │  ├─ features/
-│     │  │  ├─ auth/login.component.ts
-│     │  │  └─ tasks/tasks.page.ts
-│     │  └─ store/             # NgRx: actions, reducers, effects for auth & tasks
-│     └─ environments/
+│  ├─ api/                      # NestJS backend application
+│  │  ├─ src/
+│  │  │  ├─ app/
+│  │  │  │  ├─ app.module.ts
+│  │  │  │  ├─ entities/        # TypeORM entities: Organization, User, Task
+│  │  │  │  ├─ auth/            # Auth (controllers, services, strategies, guards, decorators)
+│  │  │  │  ├─ tasks/           # Tasks (controllers, services)
+│  │  │  │  └─ seed.ts          # Development seeding (seedDev function)
+│  │  │  └─ main.ts
+│  └─ dashboard/                # Angular frontend app (NgRx)
+│     ├─ src/
+│     │  ├─ app/
+│     │  │  ├─ app.component.ts # Main shell (standalone)
+│     │  │  ├─ app.routes.ts    # Routes ('/login', '/tasks')
+│     │  │  ├─ core/
+│     │  │  │  ├─ api/          # HttpClient wrappers: AuthApi, TasksApi
+│     │  │  │  └─ auth/         # TokenService, jwt.interceptor, auth.guard
+│     │  │  ├─ features/
+│     │  │  │  ├─ auth/
+│     │  │  │  │  └─ login.component.ts
+│     │  │  │  └─ tasks/
+│     │  │  │     └─ tasks.page.ts
+│     │  │  └─ store/           # NgRx: actions, reducers, effects for auth & tasks
+│     │  └─ environments/
 ├─ libs/
-│  ├─ auth/                    # (Nest side) re-usable guards/decorators if extracted
-│  └─ data/                    # Shared types/enums: Role, TaskStatus, JwtClaims
-├─ tools, configs, nx.json, tsconfig.base.json
+│  ├─ auth/                     # (Backend) Re-usable NestJS guards/decorators
+│  └─ data/                     # Shared types/enums: Role, TaskStatus, JwtClaims
+├─ tools/                       # Custom Nx tools/scripts
+├─ nx.json, tsconfig.base.json, package.json, etc. # Root config files
+```
+
+**Key Points**
+- The monorepo uses Nx to manage both Angular (frontend) and NestJS (backend) apps.
+- Shared code (types, enums, utilities) lives in `libs/`.
+- The backend (`api/`) is organized by domain (entities, auth, tasks).
+- The frontend (`dashboard/`) is organized by feature and uses NgRx for state management.
+- All configuration and tooling (Nx, TypeScript, etc.) reside at the root.
+
 
 
 ##Access control design & data models
